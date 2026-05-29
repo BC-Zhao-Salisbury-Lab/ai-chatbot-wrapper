@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This repository has Next.js architecture for the Assistant vs. Advisor Study.
 
-## Getting Started
+---
 
-First, run the development server:
+## Complete Local Setup Instructions
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Step 1: Install Node.js (requires Node.js to run the local server)
+1. Go to https://nodejs.org/.
+2. Download and install the LTS version for your operating system.
+3. Follow the standard installation prompts (all default settings).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Step 2: Clone Repository
+Open your computer's terminal and download this exact repository to your machine by running:
+\`\`\`bash
+git clone https://github.com/nathanjlim/ai-chatbot-wrapper.git
+cd ai-chatbot-wrapper
+\`\`\`
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Step 3: Install Dependencies
+Because the core engine files (`node_modules`) are too heavy to store on GitHub, they need to be built locally. 
+In terminal:
+\`\`\`bash
+npm install
+\`\`\`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Step 4: Configure API Key.
+Before running the application, provide the secure Anthropic (?) API key.
+1. Create a new file in the root folder named exactly `.env.local`
+2. Open the file and add the lab's official Anthropic API key like this:
+   \`\`\`text
+   ANTHROPIC_API_KEY=sk-ant-api03...
+   \`\`\`
+*(`.env.local` won't be uploaded to the internet automatically for safety).*
