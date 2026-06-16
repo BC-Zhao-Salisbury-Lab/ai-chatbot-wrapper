@@ -1,4 +1,4 @@
-This repository has Next.js architecture for the Assistant vs. Advisor Study.
+This repository has Node.js architecture for the Assistant vs. Advisor Study.
 
 ---
 
@@ -10,24 +10,24 @@ This repository has Next.js architecture for the Assistant vs. Advisor Study.
 3. Follow the standard installation prompts (all default settings).
 
 ### Step 2: Clone Repository
-Open your computer's terminal and download this exact repository to your machine by running:
-\`\`\`bash
+Open terminal and run:
+
 git clone https://github.com/nathanjlim/ai-chatbot-wrapper.git
+
 cd ai-chatbot-wrapper
-\`\`\`
 
 ### Step 3: Install Dependencies
 Because the core engine files (`node_modules`) are too heavy to store on GitHub, they need to be built locally. 
+
 In terminal:
-\`\`\`bash
+
 npm install
-\`\`\`
 
 ### Step 4: Configure API Key.
 Before running the application, provide the secure Anthropic (?) API key.
 1. Create a new file in the root folder named exactly `.env.local`
-2. Open the file and add the lab's official Anthropic API key like this:
-   \`\`\`text
-   ANTHROPIC_API_KEY=sk-ant-api03...
-   \`\`\`
+2. Open the file and add Anthropic API key like this:
+
+   ANTHROPIC_API_KEY=[enter key here]...
+
 *(`.env.local` won't be uploaded to the internet automatically for safety).*
