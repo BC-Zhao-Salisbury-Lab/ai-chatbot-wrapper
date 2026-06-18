@@ -49,7 +49,7 @@ export async function POST(req) {
 
     const response = await anthropic.messages.create({
       model: "claude-sonnet-4-6", // update to active model
-      max_tokens: 300, 
+      max_tokens: 1000, 
       system: systemInstruction, 
       messages: messages, 
     });

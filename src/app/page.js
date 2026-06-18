@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 export default function Home() {
 
@@ -9,20 +10,19 @@ export default function Home() {
   const [condition, setCondition] = useState('assistant'); 
   const [isLoading, setIsLoading] = useState(false);
 
-
+  //track
   const [qualtricsId, setQualtricsId] = useState('local_test');
   const [tabOutCount, setTabOutCount] = useState(0);
   const [interactionCount, setInteractionCount] = useState(0);
   const [startTime, setStartTime] = useState(null);
 
-
+  //timer
   const latestData = useRef({ tabs: 0, clicks: 0, start: null, qId: 'local_test', cond: 'assistant' });
 
-
+  //update
   useEffect(() => {
     latestData.current = { tabs: tabOutCount, clicks: interactionCount, start: startTime, qId: qualtricsId, cond: condition };
   }, [tabOutCount, interactionCount, startTime, qualtricsId, condition]);
-
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -65,7 +65,7 @@ export default function Home() {
     };
   }, []);
 
-  //send funct
+  //send
   const sendMessage = async () => {
     if (!input.trim()) return;
 
@@ -115,7 +115,7 @@ export default function Home() {
       fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' 
     }}>
       
-      {/*window*/}
+      {/* Main App Card */}
       <div style={{ 
         width: '100%', 
         maxWidth: '500px', 
@@ -153,7 +153,7 @@ export default function Home() {
                 fontWeight: '600',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
-                whiteSpace: 'nowrap',
+                whiteSpace: 'nowrap', 
                 backgroundColor: condition === 'assistant' ? '#ffffff' : 'transparent',
                 color: condition === 'assistant' ? '#2563eb' : '#6b7280',
                 boxShadow: condition === 'assistant' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
@@ -173,7 +173,7 @@ export default function Home() {
                 fontWeight: '600',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
-                whiteSpace: 'nowrap', // Stops the text from wrapping
+                whiteSpace: 'nowrap', 
                 backgroundColor: condition === 'advisor' ? '#ffffff' : 'transparent',
                 color: condition === 'advisor' ? '#2563eb' : '#6b7280',
                 boxShadow: condition === 'advisor' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
@@ -219,9 +219,27 @@ export default function Home() {
                 maxWidth: '85%',
                 fontSize: '15px',
                 lineHeight: '1.5',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+                boxShadow: '0 2px 4px rgba(0,0,0,0.02)',
+                whiteSpace: msg.role === 'user' ? 'pre-wrap' : 'normal',
+                overflowWrap: 'break-word'
               }}>
-                {msg.content}
+                {msg.role === 'user' ? (
+                  msg.content 
+                ) : (
+                  <ReactMarkdown 
+                    components={{
+                      p: ({node, ...props}) => <p style={{margin: '0 0 10px 0'}} {...props} />,
+                      ul: ({node, ...props}) => <ul style={{margin: '0 0 10px 0', paddingLeft: '20px'}} {...props} />,
+                      ol: ({node, ...props}) => <ol style={{margin: '0 0 10px 0', paddingLeft: '20px'}} {...props} />,
+                      li: ({node, ...props}) => <li style={{marginBottom: '4px'}} {...props} />,
+                      h2: ({node, ...props}) => <h2 style={{margin: '16px 0 8px 0', fontSize: '18px', fontWeight: 'bold'}} {...props} />,
+                      h3: ({node, ...props}) => <h3 style={{margin: '12px 0 6px 0', fontSize: '16px', fontWeight: 'bold'}} {...props} />,
+                      strong: ({node, ...props}) => <strong style={{fontWeight: '600'}} {...props} />
+                    }}
+                  >
+                    {msg.content}
+                  </ReactMarkdown>
+                )}
               </div>
             </div>
           ))}
@@ -248,7 +266,7 @@ export default function Home() {
           )}
         </div>
 
-        {/*input*/}
+        {/*input area*/}
         <div style={{ padding: '20px 24px', backgroundColor: '#ffffff', borderTop: '1px solid #f0f0f0' }}>
           <div style={{ 
             display: 'flex', 
@@ -262,7 +280,7 @@ export default function Home() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-              placeholder="Plan me a 5-day trip to Tokyo..."
+              placeholder={condition === 'assistant' ? "e.g., Find flights to Paris for next Friday..." : "e.g., Plan me a 5-day trip to Tokyo..."}
               style={{ 
                 flex: 1, 
                 padding: '10px 16px', 
@@ -295,7 +313,7 @@ export default function Home() {
 
       </div>
       
-      {/*css*/}
+      {/*typing dots*/}
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes blink {
           0% { opacity: 0.2; }
