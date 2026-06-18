@@ -33,7 +33,7 @@ You do not need to download any code or install any software to change the AI's 
 
 **Step 2: Clone Repository**
 * Open your terminal and run:
-  `git clone https://github.com/nathanjlim/ai-chatbot-wrapper.git`
+  `git clone https://github.com/BC-Zhao-Salisbury-Lab/ai-chatbot-wrapper.git`
   `cd ai-chatbot-wrapper`
 
 **Step 3: Install Dependencies**
