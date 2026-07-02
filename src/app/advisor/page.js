@@ -4,10 +4,12 @@ import { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 
 export default function AdvisorPage() {
-  const condition = 'advisor'; //dont change
+  const condition = 'advisor'; 
 
-  // UI & Chat State
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([
+    { role: 'assistant', content: "Hello! I am Jordan, your AI Advisor for all your travel needs. What's in your mind?" }
+  ]);
+  
   const [isLoading, setIsLoading] = useState(false);
   const [input, setInput] = useState('');
   const [isLimitReached, setIsLimitReached] = useState(false);
@@ -166,7 +168,7 @@ export default function AdvisorPage() {
   return (
     <div className="layout-bg" style={{ height: '100vh', display: 'flex', flexDirection: 'column', fontFamily: '"Inter", system-ui, -apple-system, sans-serif' }}>
       
-      {/* Header without back button */}
+      {/* Header */}
       <div style={{ padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#ffffff', borderBottom: '1px solid #f1f5f9', position: 'sticky', top: 0, zIndex: 10 }}>
         <h2 style={{ margin: '0', color: '#0f172a', fontSize: '15px', fontWeight: '600' }}>
           Travel Advisor
@@ -177,18 +179,19 @@ export default function AdvisorPage() {
       <div style={{ flex: 1, overflowY: 'auto', padding: '40px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{ width: '100%', maxWidth: '720px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
           
-          {messages.length === 0 && (
-            <div style={{ textAlign: 'center', margin: 'auto', padding: '12vh 20px' }}>
-              <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: '#f8fafc', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px auto' }}>
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                  <circle cx="12" cy="10" r="3"></circle>
-                </svg>
-              </div>
-              <h3 style={{ margin: '0 0 8px 0', fontSize: '24px', color: '#0f172a', fontWeight: '600', letterSpacing: '-0.01em' }}>How can I help you plan?</h3>
-              <p style={{ margin: 0, color: '#64748b', fontSize: '16px' }}>I am acting as your strategic advisor today.</p>
-            </div>
-          )}
+          {/* Custom Header Layout */}
+          <div style={{ textAlign: 'center', margin: '0 auto 16px auto', padding: '20px 20px 0 20px' }}>
+            <h1 style={{ fontSize: '26px', fontWeight: '500', color: '#000000', marginBottom: '8px' }}>
+              Travel Advisor Jordan
+            </h1>
+            <p style={{ fontSize: '15px', color: '#888888', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+              By Min Zhao
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </p>
+            <p style={{ fontSize: '15px', color: '#333333', maxWidth: '600px', margin: '0 auto', lineHeight: '1.5' }}>
+              Think of me as an expert coach – someone who is there to give you best guidance so you can simply follow.
+            </p>
+          </div>
           
           {messages.map((msg, index) => (
             <div key={index} style={{ display: 'flex', gap: '16px', width: '100%', justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
@@ -215,12 +218,16 @@ export default function AdvisorPage() {
                 color: '#1e293b',
                 whiteSpace: msg.role === 'user' ? 'pre-wrap' : 'normal',
                 overflowWrap: 'break-word',
+                border: msg.role === 'assistant' && index === 0 ? '1px solid #e2e8f0' : 'none',
+                padding: msg.role === 'assistant' && index === 0 ? '16px 20px' : (msg.role === 'user' ? '12px 18px' : '2px 0'),
+                borderRadius: msg.role === 'assistant' && index === 0 ? '16px' : (msg.role === 'user' ? '16px' : '0'),
+                boxShadow: msg.role === 'assistant' && index === 0 ? '0 4px 6px -1px rgba(0, 0, 0, 0.05)' : 'none',
               }}>
                 {msg.role === 'user' ? msg.content : (
                   <div className="markdown-body">
                     <ReactMarkdown 
                       components={{
-                        p: ({node, ...props}) => <p style={{margin: '0 0 16px 0'}} {...props} />,
+                        p: ({node, ...props}) => <p style={{margin: '0 0 16px 0', color: index === 0 ? '#64748b' : 'inherit'}} {...props} />,
                         ul: ({node, ...props}) => <ul style={{margin: '0 0 16px 0', paddingLeft: '24px'}} {...props} />,
                         ol: ({node, ...props}) => <ol style={{margin: '0 0 16px 0', paddingLeft: '24px'}} {...props} />,
                         li: ({node, ...props}) => <li style={{marginBottom: '8px'}} {...props} />,
