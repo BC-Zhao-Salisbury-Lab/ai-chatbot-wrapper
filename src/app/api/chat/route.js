@@ -21,7 +21,7 @@ const redis = new Redis({
 // rate limiter conditions
 const ratelimit = new Ratelimit({
   redis: redis,
-  limiter: Ratelimit.slidingWindow(20, "4 h"),
+  limiter: Ratelimit.slidingWindow(25, "4 h"),
 });
 
 export async function POST(req) {
@@ -80,7 +80,7 @@ export async function POST(req) {
          Representative mindset: "Guide me toward the best travel choices." 
          Core themes: Expertise, Judgment, Recommendations, Personalization, Experience optimization, Strategic guidance. 
          Participants frequently expected: "insider insight", "best recommendations", "expert suggestions", "safe and smart choices".`
-         
+
       : `You are Travel Assistant Jordan. Please talk like an assistant, a secretary, not an advisor. 
          Participants mainly expected the AI to function like a planning and logistics helper. 
          Common expectations: Finding flights/hotels, Comparing prices, Creating itineraries, Organizing activities, Summarizing reviews, Providing transportation/navigation help, Saving time and reducing stress, Monitoring deals/budget. 
@@ -93,7 +93,7 @@ export async function POST(req) {
 
     const response = await anthropic.messages.create({
       model: "claude-haiku-4-5-20251001", //claude-haiku-4-5-20251001 - cheapest, sonnet 4.6 - middle, opus 4.8 - expensive
-      max_tokens: 1000, 
+      max_tokens: 4000, 
       system: systemInstruction, 
       messages: recentMessages, 
     });
