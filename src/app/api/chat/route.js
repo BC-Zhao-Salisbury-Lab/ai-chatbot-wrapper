@@ -21,7 +21,7 @@ const redis = new Redis({
 // rate limiter conditions
 const ratelimit = new Ratelimit({
   redis: redis,
-  limiter: Ratelimit.slidingWindow(20, "12 h"),
+  limiter: Ratelimit.slidingWindow(2, "1 h"),
 });
 
 export async function POST(req) {
