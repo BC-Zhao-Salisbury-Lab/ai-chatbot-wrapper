@@ -185,7 +185,6 @@ export default function AdvisorPage() {
               Travel Advisor Jordan
             </h1>
             <p style={{ fontSize: '15px', color: '#888888', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-              By Min Zhao
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             </p>
             <p style={{ fontSize: '15px', color: '#333333', maxWidth: '600px', margin: '0 auto', lineHeight: '1.5' }}>
