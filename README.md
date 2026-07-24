@@ -1,6 +1,6 @@
 # AI Travel Chatbot - Research Tool
 
-**Live Application Link:** https://ai-chatbot-wrapper.vercel.app/assistant or https://ai-chatbot-wrapper.vercel.app/advisor
+**Live Application Link:** https://ai-chatbot-wrapper.vercel.app/assistant or https://ai-chatbot-wrapper.vercel.app/advisor or https://ai-chatbot-wrapper.vercel.app/combined
 
 This repository contains the architecture for the Assistant vs. Advisor Travel Study. The application is hosted on Vercel and connected to a secure Supabase database for behavioral tracking.
 
