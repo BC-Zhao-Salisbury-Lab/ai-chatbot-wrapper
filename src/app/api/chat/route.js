@@ -32,6 +32,7 @@ export async function POST(req) {
     const { 
       messages, 
       condition, 
+      source,
       qualtricsId, 
       tabOutCount, 
       interactionCount, 
@@ -41,6 +42,8 @@ export async function POST(req) {
     } = await req.json();
 
     const identifier = (qualtricsId && qualtricsId !== 'local_test_run') ? qualtricsId : ip;
+
+    const dbCondition = source === 'combined' ? `combined_${condition}` : condition;
 
     if (!isEOP) {
       const { success } = await ratelimit.limit(identifier);
@@ -56,7 +59,7 @@ export async function POST(req) {
     if (isEOP) {
       const { error: eopError } = await supabase.from('study_logs').insert([{
         qualtrics_response_id: qualtricsId || 'local_test_run',
-        condition: condition,
+        condition: dbCondition,
         user_message: `[END OF PROGRAM - ${eopReason}]`,
         ai_response: "[AUTO-SAVE]",
         tab_out_count: tabOutCount,
@@ -104,7 +107,7 @@ export async function POST(req) {
     // supabase logging
     const { error: supabaseError } = await supabase.from('study_logs').insert([{
       qualtrics_response_id: qualtricsId || 'local_test_run',
-      condition: condition,
+      condition: dbCondition,
       user_message: userText,
       ai_response: aiText,
       tab_out_count: tabOutCount,
