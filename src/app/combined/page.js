@@ -8,7 +8,7 @@ export default function CombinedChatPage() {
 
   // Maintain separate conversation threads for each condition
   const [chatHistories, setChatHistories] = useState({
-    assistant: [{ role: 'assistant', content: "Hello! I am Jordan, your AI Assistant for all your travel needs. How can I help you plan?" }],
+    assistant: [{ role: 'assistant', content: "Hello! I am Jordan, your AI Assistant for all your travel needs. What's in your mind?" }],
     advisor: [{ role: 'assistant', content: "Hello! I am Jordan, your AI Advisor for all your travel needs. What's in your mind?" }]
   });
   
@@ -231,10 +231,10 @@ export default function CombinedChatPage() {
             <p style={{ fontSize: '15px', color: '#888888', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             </p>
-            <p style={{ fontSize: '15px', color: '#333333', maxWidth: '600px', margin: '0 auto', lineHeight: '1.5' }}>
+            <p style={{ fontSize: '18px', color: '#333333', maxWidth: '600px', margin: '0 auto', lineHeight: '1.5' }}>
               {condition === 'advisor' 
-                ? "Think of me as an expert coach – someone who is there to give you best guidance so you can simply follow."
-                : "Think of me as your logistics helper – someone to do the heavy lifting of planning and organizing."}
+                ? "Think of me as an experienced advisor for your trip—someone who provides expert guidance and steers you toward the best travel decisions."
+                : "Think of me as a reliable helper for your travel planning—someone who helps handle the work and details so you do not have to."}
             </p>
           </div>
           
@@ -256,7 +256,7 @@ export default function CombinedChatPage() {
                 padding: msg.role === 'assistant' && index === 0 ? '16px 20px' : (msg.role === 'user' ? '12px 18px' : '2px 0'), 
                 borderRadius: msg.role === 'assistant' && index === 0 ? '16px' : (msg.role === 'user' ? '16px' : '0'),
                 maxWidth: msg.role === 'user' ? '75%' : '90%',
-                fontSize: '15.5px',
+                fontSize: (msg.role === 'assistant' && index === 0) ? '18px' : '15.5px',
                 lineHeight: '1.65',
                 color: '#1e293b',
                 whiteSpace: msg.role === 'user' ? 'pre-wrap' : 'normal',
@@ -268,7 +268,7 @@ export default function CombinedChatPage() {
                   <div className="markdown-body">
                     <ReactMarkdown 
                       components={{
-                        p: ({node, ...props}) => <p style={{margin: '0 0 16px 0', color: index === 0 ? '#64748b' : 'inherit'}} {...props} />,
+                        p: ({node, ...props}) => <p style={{margin: '0 0 16px 0', color: index === 0 ? '#64748b' : 'inherit', fontSize: index === 0 ? '18px' : 'inherit'}} {...props} />,
                         ul: ({node, ...props}) => <ul style={{margin: '0 0 16px 0', paddingLeft: '24px'}} {...props} />,
                         ol: ({node, ...props}) => <ol style={{margin: '0 0 16px 0', paddingLeft: '24px'}} {...props} />,
                         li: ({node, ...props}) => <li style={{marginBottom: '8px'}} {...props} />,

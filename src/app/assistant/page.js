@@ -188,8 +188,8 @@ export default function AssistantPage() {
  
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             </p>
-            <p style={{ fontSize: '15px', color: '#333333', maxWidth: '600px', margin: '0 auto', lineHeight: '1.5' }}>
-              Think of me as a reliable helper – someone who is there to do the work for you, so you don't have to.
+            <p style={{ fontSize: '18px', color: '#333333', maxWidth: '600px', margin: '0 auto', lineHeight: '1.5' }}>
+              Think of me as a reliable helper for your travel planning—someone who helps handle the work and details so you do not have to.
             </p>
           </div>
           
@@ -213,7 +213,7 @@ export default function AssistantPage() {
                 padding: msg.role === 'user' ? '12px 18px' : '2px 0', 
                 borderRadius: msg.role === 'user' ? '16px' : '0',
                 maxWidth: msg.role === 'user' ? '75%' : '90%',
-                fontSize: '15.5px',
+                fontSize: (msg.role === 'assistant' && index === 0) ? '18px' : '15.5px',
                 lineHeight: '1.65',
                 color: '#1e293b',
                 whiteSpace: msg.role === 'user' ? 'pre-wrap' : 'normal',
@@ -227,7 +227,7 @@ export default function AssistantPage() {
                   <div className="markdown-body">
                     <ReactMarkdown 
                       components={{
-                        p: ({node, ...props}) => <p style={{margin: '0 0 16px 0', color: index === 0 ? '#64748b' : 'inherit'}} {...props} />,
+                        p: ({node, ...props}) => <p style={{margin: '0 0 16px 0', color: index === 0 ? '#64748b' : 'inherit', fontSize: index === 0 ? '18px' : 'inherit'}} {...props} />,
                         ul: ({node, ...props}) => <ul style={{margin: '0 0 16px 0', paddingLeft: '24px'}} {...props} />,
                         ol: ({node, ...props}) => <ol style={{margin: '0 0 16px 0', paddingLeft: '24px'}} {...props} />,
                         li: ({node, ...props}) => <li style={{marginBottom: '8px'}} {...props} />,
