@@ -3,11 +3,11 @@
 import { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 
-export default function AdvisorPage() {
-  const condition = 'advisor'; 
+export default function AssistantPage() {
+  const condition = 'assistant'; 
 
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: "Hello! I am Jordan, your AI Advisor for all your travel needs. What's in your mind?" }
+    { role: 'assistant', content: "Hello! I am Jordan, your AI Assistant for all your travel needs. What's in your mind?" }
   ]);
   
   const [isLoading, setIsLoading] = useState(false);
@@ -129,7 +129,7 @@ export default function AdvisorPage() {
     }
 
     try {
-      const response = await fetch('/api/chat', {
+      const response = await fetch('/api/chat-lottery', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -169,7 +169,7 @@ export default function AdvisorPage() {
       {/* Header */}
       <div style={{ padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#ffffff', borderBottom: '1px solid #f1f5f9', position: 'sticky', top: 0, zIndex: 10 }}>
         <h2 style={{ margin: '0', color: '#0f172a', fontSize: '15px', fontWeight: '600' }}>
-          Travel Advisor
+          Travel Assistant
         </h2>
       </div>
 
@@ -179,13 +179,14 @@ export default function AdvisorPage() {
           
           <div style={{ textAlign: 'center', margin: '0 auto 8px auto', padding: '8px 20px 0 20px' }}>
             <h1 style={{ fontSize: '26px', fontWeight: '500', color: '#000000', marginBottom: '4px' }}>
-              Travel Advisor Jordan
+              Travel Assistant Jordan
             </h1>
             <p style={{ fontSize: '15px', color: '#888888', marginBottom: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+ 
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             </p>
             <p style={{ fontSize: '18px', color: '#333333', maxWidth: '600px', margin: '0 auto', lineHeight: '1.5' }}>
-              Think of me as an experienced advisor for your trip—someone who provides expert guidance and steers you toward the best travel decisions.
+              Think of me as a reliable helper for your travel planning—someone who helps handle the work and details so you do not have to.
             </p>
           </div>
           
@@ -204,8 +205,8 @@ export default function AdvisorPage() {
 
               <div style={{ 
                 background: msg.role === 'user' ? '#f1f5f9' : 'transparent',
-                padding: msg.role === 'assistant' && index === 0 ? '16px 20px' : (msg.role === 'user' ? '12px 18px' : '2px 0'), 
-                borderRadius: msg.role === 'assistant' && index === 0 ? '16px' : (msg.role === 'user' ? '16px' : '0'),
+                padding: msg.role === 'user' ? '12px 18px' : '2px 0', 
+                borderRadius: msg.role === 'user' ? '16px' : '0',
                 maxWidth: msg.role === 'user' ? '75%' : '90%',
                 fontSize: (msg.role === 'assistant' && index === 0) ? '18px' : '15.5px',
                 lineHeight: '1.65',
@@ -213,6 +214,8 @@ export default function AdvisorPage() {
                 whiteSpace: msg.role === 'user' ? 'pre-wrap' : 'normal',
                 overflowWrap: 'break-word',
                 border: msg.role === 'assistant' && index === 0 ? '1px solid #e2e8f0' : 'none',
+                padding: msg.role === 'assistant' && index === 0 ? '16px 20px' : (msg.role === 'user' ? '12px 18px' : '2px 0'),
+                borderRadius: msg.role === 'assistant' && index === 0 ? '16px' : (msg.role === 'user' ? '16px' : '0'),
                 boxShadow: msg.role === 'assistant' && index === 0 ? '0 4px 6px -1px rgba(0, 0, 0, 0.05)' : 'none',
               }}>
                 {msg.role === 'user' ? msg.content : (
@@ -264,7 +267,7 @@ export default function AdvisorPage() {
               onChange={handleTextareaChange}
               onKeyDown={handleKeyDown}
               disabled={isLimitReached}
-              placeholder={isLimitReached ? "Study portion complete." : "Message Advisor..."}
+              placeholder={isLimitReached ? "Study portion complete." : "Message Assistant..."}
               rows={1}
               style={{ flex: 1, padding: '4px 8px 4px 12px', fontSize: '15.5px', lineHeight: '1.5', background: 'transparent', border: 'none', outline: 'none', color: '#0f172a', resize: 'none', minHeight: '24px', maxHeight: '200px', overflowY: 'hidden' }}
             />
@@ -281,7 +284,7 @@ export default function AdvisorPage() {
             </button>
           </div>
           <div style={{ textAlign: 'center', marginTop: '12px', fontSize: '12px', color: '#94a3b8' }}>
-            Travel Advisor can make mistakes. Verify important information.
+            Travel Assistant can make mistakes. Verify important information.
           </div>
         </div>
       </div>

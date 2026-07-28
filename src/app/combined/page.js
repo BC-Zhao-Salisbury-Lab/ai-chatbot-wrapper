@@ -6,17 +6,15 @@ import ReactMarkdown from 'react-markdown';
 export default function CombinedChatPage() {
   const [condition, setCondition] = useState('assistant');
 
-  // Maintain separate conversation threads for each condition
   const [chatHistories, setChatHistories] = useState({
     assistant: [{ role: 'assistant', content: "Hello! I am Jordan, your AI Assistant for all your travel needs. What's in your mind?" }],
-    advisor: [{ role: 'assistant', content: "Hello! I am Jordan, your AI Advisor for all your travel needs. What's in your mind?" }]
+    advisor: [{ role: 'assistant', content: "Hello! I am Jordan, your AI Assistant for all your travel needs. What's in your mind?" }]
   });
   
   const [isLoading, setIsLoading] = useState(false);
   const [input, setInput] = useState('');
   const [isLimitReached, setIsLimitReached] = useState(false);
 
-  // Tracking Data
   const [qualtricsId, setQualtricsId] = useState('local_test');
   const [tabOutCount, setTabOutCount] = useState(0);
   const [interactionCount, setInteractionCount] = useState(0);
@@ -66,7 +64,7 @@ export default function CombinedChatPage() {
         body: JSON.stringify({ 
           messages: [], 
           condition: data.cond,
-          source: 'combined', // Tag as combined page
+          source: 'combined', 
           qualtricsId: data.qId,
           tabOutCount: data.tabs,
           interactionCount: data.clicks,
@@ -140,7 +138,7 @@ export default function CombinedChatPage() {
         body: JSON.stringify({ 
           messages: newMessages,
           condition: condition,
-          source: 'combined', // Tag as combined page
+          source: 'combined', 
           qualtricsId: qualtricsId,
           tabOutCount: tabOutCount,
           interactionCount: currentInteractions,
@@ -178,7 +176,7 @@ export default function CombinedChatPage() {
   const activeMessages = chatHistories[condition];
 
   return (
-    <div className="layout-bg" style={{ height: '100vh', display: 'flex', flexDirection: 'column', fontFamily: '"Inter", system-ui, -apple-system, sans-serif' }}>
+    <div className="layout-bg" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', fontFamily: '"Inter", system-ui, -apple-system, sans-serif' }}>
       
       {/* Header with Toggle */}
       <div style={{ padding: '12px 24px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#ffffff', borderBottom: '1px solid #f1f5f9', position: 'sticky', top: 0, zIndex: 10 }}>
@@ -220,15 +218,15 @@ export default function CombinedChatPage() {
         </div>
       </div>
 
-      {/* Chat Area */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '40px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <div style={{ width: '100%', maxWidth: '720px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
+      {/* Chat Area - Natural Flow (No Flex 1) */}
+      <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div style={{ width: '100%', maxWidth: '720px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
           
-          <div style={{ textAlign: 'center', margin: '0 auto 16px auto', padding: '20px 20px 0 20px' }}>
-            <h1 style={{ fontSize: '26px', fontWeight: '500', color: '#000000', marginBottom: '8px' }}>
+          <div style={{ textAlign: 'center', margin: '0 auto 8px auto', padding: '8px 20px 0 20px' }}>
+            <h1 style={{ fontSize: '26px', fontWeight: '500', color: '#000000', marginBottom: '4px' }}>
               Travel {condition === 'advisor' ? 'Advisor' : 'Assistant'} Jordan
             </h1>
-            <p style={{ fontSize: '15px', color: '#888888', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+            <p style={{ fontSize: '15px', color: '#888888', marginBottom: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             </p>
             <p style={{ fontSize: '18px', color: '#333333', maxWidth: '600px', margin: '0 auto', lineHeight: '1.5' }}>
@@ -303,8 +301,8 @@ export default function CombinedChatPage() {
         </div>
       </div>
 
-      {/* Input Field */}
-      <div style={{ padding: '24px 20px', background: 'linear-gradient(to top, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%)', display: 'flex', justifyContent: 'center' }}>
+      {/* Input Field - No gradient, snug to the chat */}
+      <div style={{ padding: '0 20px 24px 20px', display: 'flex', justifyContent: 'center' }}>
         <div style={{ width: '100%', maxWidth: '720px', position: 'relative' }}>
           <div className="input-wrapper" style={{ display: 'flex', alignItems: 'flex-end', backgroundColor: '#ffffff', padding: '10px 12px', borderRadius: '16px', border: '1px solid #cbd5e1', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
             <textarea 
@@ -315,7 +313,7 @@ export default function CombinedChatPage() {
               disabled={isLimitReached}
               placeholder={isLimitReached ? "Study portion complete." : `Message ${condition === 'advisor' ? 'Advisor' : 'Assistant'}...`}
               rows={1}
-              style={{ flex: 1, padding: '4px 8px 4px 12px', fontSize: '15.5px', lineHeight: '1.5', background: 'transparent', border: 'none', outline: 'none', color: '#0f172a', resize: 'none', minHeight: '24px', maxHeight: '200px', overflowY: 'auto' }}
+              style={{ flex: 1, padding: '4px 8px 4px 12px', fontSize: '15.5px', lineHeight: '1.5', background: 'transparent', border: 'none', outline: 'none', color: '#0f172a', resize: 'none', minHeight: '24px', maxHeight: '200px', overflowY: 'hidden' }}
             />
             <button 
               className="send-btn"

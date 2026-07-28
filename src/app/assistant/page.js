@@ -14,13 +14,11 @@ export default function AssistantPage() {
   const [input, setInput] = useState('');
   const [isLimitReached, setIsLimitReached] = useState(false);
 
-  // Tracking Data
   const [qualtricsId, setQualtricsId] = useState('local_test');
   const [tabOutCount, setTabOutCount] = useState(0);
   const [interactionCount, setInteractionCount] = useState(0);
   const [startTime, setStartTime] = useState(null);
 
-  // Refs for UI and Tracking
   const latestData = useRef({ tabs: 0, clicks: 0, start: null, qId: 'local_test', cond: condition });
   const inactivityTimer = useRef(null);
   const TIMEOUT_DURATION = 5 * 60 * 1000; 
@@ -166,7 +164,7 @@ export default function AssistantPage() {
   };
 
   return (
-    <div className="layout-bg" style={{ height: '100vh', display: 'flex', flexDirection: 'column', fontFamily: '"Inter", system-ui, -apple-system, sans-serif' }}>
+    <div className="layout-bg" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', fontFamily: '"Inter", system-ui, -apple-system, sans-serif' }}>
       
       {/* Header */}
       <div style={{ padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#ffffff', borderBottom: '1px solid #f1f5f9', position: 'sticky', top: 0, zIndex: 10 }}>
@@ -175,16 +173,15 @@ export default function AssistantPage() {
         </h2>
       </div>
 
-      {/* Chat Area */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '40px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <div style={{ width: '100%', maxWidth: '720px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
+      {/* Chat Area - Natural Flow (No Flex 1) */}
+      <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div style={{ width: '100%', maxWidth: '720px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
           
-          {/* Custom Header Layout */}
-          <div style={{ textAlign: 'center', margin: '0 auto 16px auto', padding: '20px 20px 0 20px' }}>
-            <h1 style={{ fontSize: '26px', fontWeight: '500', color: '#000000', marginBottom: '8px' }}>
+          <div style={{ textAlign: 'center', margin: '0 auto 8px auto', padding: '8px 20px 0 20px' }}>
+            <h1 style={{ fontSize: '26px', fontWeight: '500', color: '#000000', marginBottom: '4px' }}>
               Travel Assistant Jordan
             </h1>
-            <p style={{ fontSize: '15px', color: '#888888', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+            <p style={{ fontSize: '15px', color: '#888888', marginBottom: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
  
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             </p>
@@ -196,7 +193,6 @@ export default function AssistantPage() {
           {messages.map((msg, index) => (
             <div key={index} style={{ display: 'flex', gap: '16px', width: '100%', justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
               
-              {/* AI Profile */}
               {msg.role === 'assistant' && (
                 <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#0f172a', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -207,7 +203,6 @@ export default function AssistantPage() {
                 </div>
               )}
 
-              {/* Message UI */}
               <div style={{ 
                 background: msg.role === 'user' ? '#f1f5f9' : 'transparent',
                 padding: msg.role === 'user' ? '12px 18px' : '2px 0', 
@@ -262,8 +257,8 @@ export default function AssistantPage() {
         </div>
       </div>
 
-      {/* Input */}
-      <div style={{ padding: '24px 20px', background: 'linear-gradient(to top, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%)', display: 'flex', justifyContent: 'center' }}>
+      {/* Input - No gradient, snug to the chat */}
+      <div style={{ padding: '0 20px 24px 20px', display: 'flex', justifyContent: 'center' }}>
         <div style={{ width: '100%', maxWidth: '720px', position: 'relative' }}>
           <div className="input-wrapper" style={{ display: 'flex', alignItems: 'flex-end', backgroundColor: '#ffffff', padding: '10px 12px', borderRadius: '16px', border: '1px solid #cbd5e1', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
             <textarea 
@@ -274,7 +269,7 @@ export default function AssistantPage() {
               disabled={isLimitReached}
               placeholder={isLimitReached ? "Study portion complete." : "Message Assistant..."}
               rows={1}
-              style={{ flex: 1, padding: '4px 8px 4px 12px', fontSize: '15.5px', lineHeight: '1.5', background: 'transparent', border: 'none', outline: 'none', color: '#0f172a', resize: 'none', minHeight: '24px', maxHeight: '200px', overflowY: 'auto' }}
+              style={{ flex: 1, padding: '4px 8px 4px 12px', fontSize: '15.5px', lineHeight: '1.5', background: 'transparent', border: 'none', outline: 'none', color: '#0f172a', resize: 'none', minHeight: '24px', maxHeight: '200px', overflowY: 'hidden' }}
             />
             <button 
               className="send-btn"

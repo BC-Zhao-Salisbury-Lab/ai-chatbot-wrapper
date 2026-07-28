@@ -129,7 +129,7 @@ export default function AdvisorPage() {
     }
 
     try {
-      const response = await fetch('/api/chat', {
+      const response = await fetch('/api/chat-lottery', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
