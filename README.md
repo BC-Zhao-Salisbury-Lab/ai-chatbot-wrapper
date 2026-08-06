@@ -1,6 +1,9 @@
 # AI Travel Chatbot - Research Tool
 
-**Live Application Link:** https://ai-chatbot-wrapper.vercel.app/assistant or https://ai-chatbot-wrapper.vercel.app/advisor or https://ai-chatbot-wrapper.vercel.app/combined
+**Live Application Links:** 
+* **Trial Phase:** https://ai-chatbot-wrapper.vercel.app/combined
+* **Main Phase:** https://ai-chatbot-wrapper.vercel.app/assistant or https://ai-chatbot-wrapper.vercel.app/advisor
+* **Reward Phase:** https://ai-chatbot-wrapper.vercel.app/future-assistant or https://ai-chatbot-wrapper.vercel.app/future-advisor
 
 This repository contains the architecture for the Assistant vs. Advisor Travel Study. The application is hosted on Vercel and connected to a secure Supabase database for behavioral tracking.
 
@@ -12,8 +15,10 @@ You do not need to download any code or install any software to change the AI's 
 
 ### Step-by-Step Instructions:
 
-1. **Navigate to the core file:** Look at the folder list above and click through this exact path: `src` ➔ `app` ➔ `api` ➔ `chat` ➔ `route.js`
-2. **Open the Editor:** Once you are looking at the code for `route.js`, look towards the top right corner of the code box. Click the Pencil Icon (✏️) to edit the file.
+1. **Navigate to the core file:** Look at the folder list above and click through this exact path to find the API file you need to change:
+   * For the 10-message Trial and 20-message Main Task: `src` ➔ `app` ➔ `api` ➔ `chat` ➔ `route.js`
+   * For the 500-message Reward Links: `src` ➔ `app` ➔ `api` ➔ `chat-future` ➔ `route.js`
+2. **Open the Editor:** Once you are looking at the code for the correct `route.js` file, look towards the top right corner of the code box. Click the Pencil Icon (✏️) to edit the file.
 3. **Locate the Prompts:** Scroll down to the `// AI Prompts` section. You will see two paragraphs of plain English text wrapped in quotation marks (`\``).
    * One is the instruction for the **advisor** condition.
    * One is the instruction for the **assistant** condition.
@@ -29,10 +34,13 @@ You are done! Vercel will automatically detect that you saved a new change, and 
 This tool is a full-stack application designed specifically to maintain experimental control and securely log behavioral data. 
 
 ### The Tech Stack
-* **Frontend & Hosting (Next.js & Vercel):** Manages the isolated `/assistant` and `/advisor` routing to ensure participants are locked into their assigned condition.
+* **Frontend & Hosting (Next.js & Vercel):** Manages the distinct routing phases of the study to ensure experimental control:
+  * **Trial Phase (`/combined`):** 10-message independent limit per tab.
+  * **Main Phase (`/assistant` & `/advisor`):** 20-message limit for the selected condition.
+  * **Reward Phase (`/future-assistant` & `/future-advisor`):** 500-message limit for future planning.
 * **LLM Engine (Anthropic):** Powered by the Claude Haiku model for fast, cost-effective generation based on strict persona rubrics.
 * **Database (Supabase / PostgreSQL):** Handles real-time telemetry and data logging.
-* **Rate Limiting (Upstash Redis):** A sliding window rate limiter that restricts the number of messages a participant can send to prevent API abuse.
+* **Rate Limiting (Upstash Redis):** A sliding window rate limiter that restricts the number of messages a participant can send to prevent API abuse, isolated dynamically by routing phase.
 
 ### The Qualtrics Integration Pipeline
 Participants are handed off from Qualtrics to the web application via URL parameters. 
@@ -43,7 +51,7 @@ Participants are handed off from Qualtrics to the web application via URL parame
 ### Database Schema (`study_logs` table)
 All interactions are logged in Supabase. The table contains the following structure:
 * `qualtrics_response_id`: The unique user ID piped in from the survey.
-* `condition`: Hardcoded as either `assistant` or `advisor` based on the URL path.
+* `condition`: Automatically formatted based on the URL path. It will output `assistant` or `advisor` for the main and future pages, and `combined_assistant` or `combined_advisor` for the trial phase to keep data segments easily identifiable.
 * `user_message`: The text inputted by the participant.
 * `ai_response`: The generated output from Claude.
 * `tab_out_count`: A JavaScript event listener that tracks how many times `document.hidden` triggers, measuring participant distraction.

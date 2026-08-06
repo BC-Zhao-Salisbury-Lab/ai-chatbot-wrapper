@@ -25,13 +25,20 @@ export default function AdvisorPage() {
   
   const textareaRef = useRef(null);
   const messagesEndRef = useRef(null);
+  const isInitialMount = useRef(true);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
-    scrollToBottom();
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    if (messages.length > 1 || isLoading) {
+      scrollToBottom();
+    }
   }, [messages, isLoading]);
 
   useEffect(() => {
@@ -56,13 +63,14 @@ export default function AdvisorPage() {
       if (!data.start) return; 
       const elapsedSeconds = Math.floor((Date.now() - data.start) / 1000);
 
-      fetch('/api/chat', {
+      fetch('/api/chat-future', {
         method: 'POST',
         keepalive: true, 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           messages: [], 
           condition: data.cond,
+          source: 'future',
           qualtricsId: data.qId,
           tabOutCount: data.tabs,
           interactionCount: data.clicks,
@@ -129,12 +137,13 @@ export default function AdvisorPage() {
     }
 
     try {
-      const response = await fetch('/api/chat-lottery', {
+      const response = await fetch('/api/chat-future', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           messages: newMessages,
           condition: condition,
+          source: 'future',
           qualtricsId: qualtricsId,
           tabOutCount: tabOutCount,
           interactionCount: currentInteractions,

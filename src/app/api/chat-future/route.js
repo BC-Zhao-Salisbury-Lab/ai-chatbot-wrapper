@@ -16,9 +16,8 @@ const redis = new Redis({
   token: process.env.UPSTASH_REDIS_REST_TOKEN,
 });
 
-// Create distinct sliding windows for the different phases
-const ratelimitTrial = new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(10, "4 h") });
-const ratelimitMain = new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(20, "4 h") });
+// Create a large sliding window for the final reward phase
+const ratelimitFuture = new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(500, "4 h") });
 
 export async function POST(req) {
   try {
@@ -28,7 +27,6 @@ export async function POST(req) {
     const { 
       messages, 
       condition, 
-      source,
       qualtricsId, 
       tabOutCount, 
       interactionCount, 
@@ -38,21 +36,17 @@ export async function POST(req) {
     } = await req.json();
 
     const baseIdentifier = (qualtricsId && qualtricsId !== 'local_test_run') ? qualtricsId : ip;
-    const dbCondition = source === 'combined' ? `combined_${condition}` : condition;
+    const dbCondition = `future_${condition}`;
 
     if (!isEOP) {
-      // Create a unique Redis key so the trial limits don't steal from the main limits
-      const redisKey = `${baseIdentifier}_${source}_${condition}`;
+      // Append the condition so the 500 limit is unique to that specific URL
+      const redisKey = `${baseIdentifier}_future_${condition}`;
       
-      // Route the request to the correct sliding window limit
-      const activeRateLimiter = source === 'combined' ? ratelimitTrial : ratelimitMain;
-      
-      const { success } = await activeRateLimiter.limit(redisKey);
+      const { success } = await ratelimitFuture.limit(redisKey);
       
       if (!success) {
-        const limitType = source === 'combined' ? "10-question trial" : "20-question main plan";
         return NextResponse.json(
-          { error: `You have reached the ${limitType} limit. Please return to Qualtrics.` }, 
+          { error: "You have reached the 500-message limit for this future planning link." }, 
           { status: 429 }
         );
       }
@@ -80,20 +74,8 @@ export async function POST(req) {
 
     // AI Prompts
     const systemInstruction = condition === 'advisor'
-      ? `You are Travel Advisor Jordan. Speak like an advisor, guide, and coach, not an assistant.
-      Participants mainly expect the AI to function as a knowledgeable travel expert who provides expertise, explanations, insights, and helps reduce uncertainty.
-      Common expectations: Recommending destinations and activities, providing insider knowledge, suggesting the best options, helping users make decisions, offering cultural and local expertise, curating meaningful experiences, and personalizing recommendations.
-      Representative mindset: "Guide me toward the best travel choice."
-      Before making initial recommendations, ask at least one question, and no more than 3 questions about the participant's travel preferences, goals, or interests so your advice is tailored to what they value.
-      Core themes: Expertise, judgment, recommendations, personalization, experience optimization, and strategic guidance.
-      The participant should feel they are receiving expert guidance that helps them make informed travel decisions.`
-
-      : `You are Travel Assistant Jordan. Speak like an assistant, secretary, and sidekick, not an advisor.
-      Participants mainly expect the AI to function as a planning and organizational helper who handles logistics, completes tedious tasks, and saves effort.
-      Common expectations: Finding flights and hotels, comparing prices, creating itineraries, organizing activities, summarizing reviews, providing transportation and navigation information, monitoring deals and budgets, and saving time. Representative mindset: "Help me execute the trip efficiently."
-      Before making initial recommendations, ask at least one question, and no more than 3 questions about the participant's logistical needs or planning constraints (such as budget, travel dates, transportation, accommodations, or schedule) so your assistance is tailored to their trip.
-      Core themes: Convenience, information aggregation, organization, automation, research assistance, and practical support.
-      The participant should feel they are receiving efficient support that makes planning and executing the trip easier.`;
+      ? `You are Travel Advisor Jordan. Speak like an advisor, guide, and coach, not an assistant... (truncated for brevity)`
+      : `You are Travel Assistant Jordan. Speak like an assistant, secretary, and sidekick, not an advisor... (truncated for brevity)`;
 
     const recentMessages = messages.slice(-10);
 

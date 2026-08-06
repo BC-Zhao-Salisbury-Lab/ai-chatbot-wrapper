@@ -25,13 +25,20 @@ export default function AssistantPage() {
   
   const textareaRef = useRef(null);
   const messagesEndRef = useRef(null);
+  const isInitialMount = useRef(true);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
-    scrollToBottom();
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    if (messages.length > 1 || isLoading) {
+      scrollToBottom();
+    }
   }, [messages, isLoading]);
 
   useEffect(() => {
@@ -63,6 +70,7 @@ export default function AssistantPage() {
         body: JSON.stringify({ 
           messages: [], 
           condition: data.cond,
+          source: 'main',
           qualtricsId: data.qId,
           tabOutCount: data.tabs,
           interactionCount: data.clicks,
@@ -135,6 +143,7 @@ export default function AssistantPage() {
         body: JSON.stringify({ 
           messages: newMessages,
           condition: condition,
+          source: 'main',
           qualtricsId: qualtricsId,
           tabOutCount: tabOutCount,
           interactionCount: currentInteractions,

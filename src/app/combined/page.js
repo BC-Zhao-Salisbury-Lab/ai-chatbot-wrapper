@@ -8,12 +8,11 @@ export default function CombinedChatPage() {
 
   const [chatHistories, setChatHistories] = useState({
     assistant: [{ role: 'assistant', content: "Hello! I am Jordan, your AI Assistant for all your travel needs. What's in your mind?" }],
-    advisor: [{ role: 'assistant', content: "Hello! I am Jordan, your AI Assistant for all your travel needs. What's in your mind?" }]
+    advisor: [{ role: 'assistant', content: "Hello! I am Jordan, your AI Advisor for all your travel needs. What's in your mind?" }]
   });
   
   const [isLoading, setIsLoading] = useState(false);
   const [input, setInput] = useState('');
-  const [isLimitReached, setIsLimitReached] = useState(false);
 
   const [qualtricsId, setQualtricsId] = useState('local_test');
   const [tabOutCount, setTabOutCount] = useState(0);
@@ -26,13 +25,27 @@ export default function CombinedChatPage() {
   
   const textareaRef = useRef(null);
   const messagesEndRef = useRef(null);
+  const isInitialMount = useRef(true);
+
+  // Dynamically calculate if the limit is reached for the active tab
+  const activeMessages = chatHistories[condition];
+  const userMessageCount = activeMessages.filter(msg => msg.role === 'user').length;
+  const isLimitReached = userMessageCount >= 10;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
-    scrollToBottom();
+    // Prevent auto-scroll on the initial page load so instructions remain visible
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    // Only scroll if a new message has been added or if it is loading
+    if (activeMessages.length > 1 || isLoading) {
+      scrollToBottom();
+    }
   }, [chatHistories, condition, isLoading]);
 
   useEffect(() => {
@@ -122,6 +135,7 @@ export default function CombinedChatPage() {
 
     const currentMessages = chatHistories[condition];
     const newMessages = [...currentMessages, { role: 'user', content: input }];
+    const isTenthMessage = userMessageCount + 1 === 10;
     
     setChatHistories(prev => ({ ...prev, [condition]: newMessages }));
     setInput('');
@@ -148,23 +162,30 @@ export default function CombinedChatPage() {
 
       const data = await response.json();
 
-      if (response.status === 429) {
-        setIsLimitReached(true);
+      if (response.status === 429 || data.error) {
         setChatHistories(prev => ({
           ...prev,
           [condition]: [...newMessages, { 
             role: 'assistant', 
-            content: "**System Message:** You have reached the maximum number of messages allowed for this study. Please return to Qualtrics to complete the final survey." 
+            content: "**System Message:** " + (data.error || "You have reached the maximum number of messages allowed for this study. Please return to Qualtrics.") 
           }]
         }));
         return;
       }
 
       if (data.result) {
-        setChatHistories(prev => ({
-          ...prev,
-          [condition]: [...newMessages, { role: 'assistant', content: data.result }]
-        }));
+        setChatHistories(prev => {
+          const updatedMessages = [...newMessages, { role: 'assistant', content: data.result }];
+          
+          // Append the study instruction once they hit their trial limit for this specific tab
+          if (isTenthMessage) {
+             updatedMessages.push({
+               role: 'assistant',
+               content: "**System Message:** You have used up your 10-question quota for this trial. Please return to the survey to select your preferred AI version."
+             });
+          }
+          return { ...prev, [condition]: updatedMessages };
+        });
       }
     } catch (error) {
       console.error("Chat error:", error);
@@ -172,8 +193,6 @@ export default function CombinedChatPage() {
       setIsLoading(false);
     }
   };
-
-  const activeMessages = chatHistories[condition];
 
   return (
     <div className="layout-bg" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', fontFamily: '"Inter", system-ui, -apple-system, sans-serif' }}>
@@ -218,11 +237,11 @@ export default function CombinedChatPage() {
         </div>
       </div>
 
-      {/* Chat Area - Natural Flow (No Flex 1) */}
-      <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      {/* Chat Area - Adjusted Padding to reduce UI gaps */}
+      <div style={{ padding: '8px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{ width: '100%', maxWidth: '720px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
           
-          <div style={{ textAlign: 'center', margin: '0 auto 8px auto', padding: '8px 20px 0 20px' }}>
+          <div style={{ textAlign: 'center', margin: '0 auto 4px auto', padding: '4px 20px 0 20px' }}>
             <h1 style={{ fontSize: '26px', fontWeight: '500', color: '#000000', marginBottom: '4px' }}>
               Travel {condition === 'advisor' ? 'Advisor' : 'Assistant'} Jordan
             </h1>
@@ -253,7 +272,7 @@ export default function CombinedChatPage() {
                 background: msg.role === 'user' ? '#f1f5f9' : 'transparent',
                 padding: msg.role === 'assistant' && index === 0 ? '16px 20px' : (msg.role === 'user' ? '12px 18px' : '2px 0'), 
                 borderRadius: msg.role === 'assistant' && index === 0 ? '16px' : (msg.role === 'user' ? '16px' : '0'),
-                maxWidth: msg.role === 'user' ? '75%' : '90%',
+                maxWidth: msg.role === 'user' ? '75%' : '100%',
                 fontSize: (msg.role === 'assistant' && index === 0) ? '18px' : '15.5px',
                 lineHeight: '1.65',
                 color: '#1e293b',
@@ -301,7 +320,6 @@ export default function CombinedChatPage() {
         </div>
       </div>
 
-      {/* Input Field - No gradient, snug to the chat */}
       <div style={{ padding: '0 20px 24px 20px', display: 'flex', justifyContent: 'center' }}>
         <div style={{ width: '100%', maxWidth: '720px', position: 'relative' }}>
           <div className="input-wrapper" style={{ display: 'flex', alignItems: 'flex-end', backgroundColor: '#ffffff', padding: '10px 12px', borderRadius: '16px', border: '1px solid #cbd5e1', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
@@ -311,7 +329,7 @@ export default function CombinedChatPage() {
               onChange={handleTextareaChange}
               onKeyDown={handleKeyDown}
               disabled={isLimitReached}
-              placeholder={isLimitReached ? "Study portion complete." : `Message ${condition === 'advisor' ? 'Advisor' : 'Assistant'}...`}
+              placeholder={isLimitReached ? "10-question trial limit reached." : `Message ${condition === 'advisor' ? 'Advisor' : 'Assistant'}...`}
               rows={1}
               style={{ flex: 1, padding: '4px 8px 4px 12px', fontSize: '15.5px', lineHeight: '1.5', background: 'transparent', border: 'none', outline: 'none', color: '#0f172a', resize: 'none', minHeight: '24px', maxHeight: '200px', overflowY: 'hidden' }}
             />
