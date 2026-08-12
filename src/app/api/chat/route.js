@@ -17,7 +17,7 @@ const redis = new Redis({
 });
 
 // Create distinct sliding windows for the different phases
-const ratelimitTrial = new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(10, "4 h") });
+const ratelimitTrial = new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(5, "4 h") });
 const ratelimitMain = new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(20, "4 h") });
 
 export async function POST(req) {
@@ -50,7 +50,7 @@ export async function POST(req) {
       const { success } = await activeRateLimiter.limit(redisKey);
       
       if (!success) {
-        const limitType = source === 'combined' ? "10-question trial" : "20-question main plan";
+        const limitType = source === 'combined' ? "5-question trial" : "20-question main plan";
         return NextResponse.json(
           { error: `You have reached the ${limitType} limit. Please return to Qualtrics.` }, 
           { status: 429 }
