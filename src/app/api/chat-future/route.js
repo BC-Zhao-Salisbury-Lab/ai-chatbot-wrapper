@@ -77,7 +77,7 @@ export async function POST(req) {
       ? `You are Travel Advisor Jordan. Speak like an advisor, guide, and coach, not an assistant... (truncated for brevity)`
       : `You are Travel Assistant Jordan. Speak like an assistant, secretary, and sidekick, not an advisor... (truncated for brevity)`;
 
-    const recentMessages = messages.slice(-10);
+    const recentMessages = messages.slice(-30);
 
     const response = await anthropic.messages.create({
       model: "claude-haiku-4-5-20251001", 

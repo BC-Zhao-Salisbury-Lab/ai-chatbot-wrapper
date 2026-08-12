@@ -95,7 +95,7 @@ export async function POST(req) {
       Core themes: Convenience, information aggregation, organization, automation, research assistance, and practical support.
       The participant should feel they are receiving efficient support that makes planning and executing the trip easier.`;
 
-    const recentMessages = messages.slice(-10);
+    const recentMessages = messages.slice(-20);
 
     const response = await anthropic.messages.create({
       model: "claude-haiku-4-5-20251001", 
