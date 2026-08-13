@@ -52,7 +52,7 @@ export async function POST(req) {
       if (!success) {
         const limitType = source === 'combined' ? "5-question trial" : "20-question main plan";
         return NextResponse.json(
-          { error: `You have reached the ${limitType} limit.` }, 
+          { error: `You have reached the ${limitType} limit. Please be sure you have tried both the Assistant and Advisor versions before making your choice on the next page.` }, 
           { status: 429 }
         );
       }
