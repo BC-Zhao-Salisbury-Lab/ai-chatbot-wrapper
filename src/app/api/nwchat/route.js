@@ -37,7 +37,7 @@ export async function POST(req) {
       eopReason 
     } = await req.json();
 
-    const baseIdentifier = (qualtricsId && qualtricsId !== 'local_test_run') ? qualtricsId : ip;
+    const baseIdentifier = (qualtricsId && qualtricsId !== 'local_test') ? qualtricsId : ip;
     const dbCondition = source === 'combined' ? `combined_${condition}` : condition;
 
     if (!isEOP) {
@@ -79,7 +79,7 @@ export async function POST(req) {
       return NextResponse.json({ error: "Messages array is required" }, { status: 400 });
     }
 
-    const systemInstruction = "Before making initial recommendations, first ask three question about the participant's preference or constraints so your assistance is tailored to their trip.";
+    const systemInstruction = "You are a helpful travel AI. Before making initial recommendations, first ask three questions about the participant's preference or constraints so your assistance is tailored to their trip.";
 
     // UPDATED: Adjusted slice to 8 to match the new limit 
     const recentMessages = messages.slice(-8);
