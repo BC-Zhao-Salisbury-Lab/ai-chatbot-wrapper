@@ -167,7 +167,7 @@ export default function CombinedChatPage() {
           ...prev,
           [condition]: [...newMessages, { 
             role: 'assistant', 
-            content: "**System Message:** " + (data.error || "You have reached the maximum number of messages allowed for this study. Please return to Qualtrics.") 
+            content: "**System Message:** " + (data.error || "You have reached the maximum number of messages allowed for this study.") 
           }]
         }));
         return;
@@ -181,7 +181,7 @@ export default function CombinedChatPage() {
           if (isTenthMessage) {
              updatedMessages.push({
                role: 'assistant',
-               content: "**System Message:** You have used up your 10-question quota for this trial. Please return to the survey to select your preferred AI version."
+               content: "**System Message:** You have used up your quota for this trial. Please click next to select your preferred AI version."
              });
           }
           return { ...prev, [condition]: updatedMessages };
