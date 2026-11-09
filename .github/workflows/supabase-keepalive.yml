@@ -1,0 +1,33 @@
+# Keeps the Supabase project "ai-chatbot-study" active so it isn't auto-paused.
+# Runs on GitHub's servers, independent of Vercel.
+#
+# Required repo secrets (Settings → Secrets and variables → Actions):
+#   SUPABASE_URL       https://gicsehzwnkvgjpfuqvet.supabase.co
+#   SUPABASE_ANON_KEY  same value as NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel
+
+name: Supabase keep-alive
+
+on:
+  schedule:
+    - cron: "0 12 */3 * *"   # every 3 days at 12:00 UTC
+  workflow_dispatch:          # run manually from the Actions tab
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Query study_logs
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          status=$(curl -s -o response.txt -w "%{http_code}" \
+            "$SUPABASE_URL/rest/v1/study_logs?select=id&limit=1" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY")
+          echo "HTTP $status"
+          cat response.txt
+          if [ "$status" -ge 400 ]; then
+            echo "Ping failed. Check the SUPABASE_URL and SUPABASE_ANON_KEY secrets."
+            exit 1
+          fi
