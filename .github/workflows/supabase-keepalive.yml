@@ -3,7 +3,7 @@
 #
 # Required repo secrets (Settings → Secrets and variables → Actions):
 #   SUPABASE_URL       https://gicsehzwnkvgjpfuqvet.supabase.co
-#   SUPABASE_ANON_KEY  same value as NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel
+#   SUPABASE_ANON_KEY  Supabase publishable key (sb_publishable_...)
 
 name: Supabase keep-alive
 
@@ -23,8 +23,7 @@ jobs:
         run: |
           status=$(curl -s -o response.txt -w "%{http_code}" \
             "$SUPABASE_URL/rest/v1/study_logs?select=id&limit=1" \
-            -H "apikey: $SUPABASE_ANON_KEY" \
-            -H "Authorization: Bearer $SUPABASE_ANON_KEY")
+            -H "apikey: $SUPABASE_ANON_KEY")
           echo "HTTP $status"
           cat response.txt
           if [ "$status" -ge 400 ]; then
